@@ -1,0 +1,66 @@
+Rapidshare downloader
+=====================
+
+Download files from rapidshare. These scripts are based on work by Mark
+Sullivan. Consists of 2 scripts: download.rb and monitor.sh
+
+Pre-requisites:
+---------------
+- Choice rubygem (install using `gem install choice`)
+- A premium rapidshare account
+- Ruby 1.8 or 1.9
+
+Setup:
+------
+
+Firstly, the script needs to be able to login to your rapidshare account. In
+order to do this run the download.rb script with the following arguments:
+
+./download.rb --user=MYUSERNAME --password=MYPASSWORD
+
+This will store a cookie in a file called rapidshare in the current
+directory. Note that this process only needs to be done once (providing that
+the rapidshare cookie file exists).
+
+Downloading: download.rb
+------------------------
+
+To download a single file from rapidshare use the following command (replacing
+the URL with the URL of the file to download)
+
+./download.rb --url=MYURL
+
+This will print out the actual download URL and then begin downloading the file
+in the background.
+
+Alternatively, if you wish to download multiple files, put the URLs into a text
+file (one URL per line) and use the following command:
+
+./download.rb --file=myfile.txt
+
+This will download all of the files listed in myfile.txt simultaneously.
+
+To monitor the progress of the download(s) use the monitor.sh script:
+
+Monitoring: monitor.sh
+----------------------
+
+./monitor.sh 
+
+The above command will monitor all of the current downloads and will update
+every 10 seconds by default. In order to change how often the script updates,
+give a number as the first argument. For example, to make the script update
+every 2 seconds, use:
+
+./monitor.sh 2
+
+Cancelling:
+-----------
+
+In order to cancel a download use ps and kill as follows:
+
+ps -ax | grep wget
+
+Find the process number of the wget and use
+
+kill -9 <PID>
