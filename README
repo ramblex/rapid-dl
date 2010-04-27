@@ -2,7 +2,8 @@ Rapidshare downloader
 =====================
 
 Download files from rapidshare. These scripts are based on work by Mark
-Sullivan. Consists of 2 scripts: download.rb and monitor.sh
+Sullivan (http://www.markontech.com/). Consists of 2 scripts: download.rb and
+monitor.sh
 
 Pre-requisites:
 ---------------
