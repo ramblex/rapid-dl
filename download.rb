@@ -32,6 +32,13 @@ Choice.options do
     desc 'Your rapidshare password'
   end
 
+  option :output_dir do
+    short '-o'
+    long '--output-dir=DIR'
+    desc 'Directory in which to put files'
+    default ''
+  end
+
   option :help do
     long '--help'
     desc 'Show this message'
@@ -47,7 +54,7 @@ def download(url)
   url = %x[grep /files test2.tmp | tail -1 ].split(/'/)[1]
   filename = %x[basename #{url}]
   puts "-> #{url}"
-  %x[wget -b --load-cookies #{@cookie} #{url} -O #{filename}]
+  %x[wget -b --load-cookies #{@cookie} #{url} -O #{Choice.choices[:output_dir]}/#{filename}]
   File.delete "test.tmp"
   File.delete "test2.tmp"
 end
@@ -62,6 +69,11 @@ if !File.file? @cookie
   else
     puts "Please specify your rapidshare username and password. See help (-h)."
   end
+end
+
+if !Choice.choices[:output_dir].empty?
+  puts "Putting files into #{Choice.choices[:output_dir]}"
+  FileUtils.mkdir_p Choice.choices[:output_dir]
 end
 
 if Choice.choices[:file] 
