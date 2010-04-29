@@ -46,10 +46,12 @@ function parse_file {
     done < $1
 }
 
-while getopts "u:f:" flag
-do
-    case "$flag" in
-        u) shift; download_url $OPTARG; shift;;
-        f) shift; parse_file $OPTARG; shift;;
-    esac
-done
+if [ $# -ne 1 ]
+then
+    echo "USAGE: rapid-dl [FILE|URL]"
+elif [ -f $1 ]
+then
+    parse_file $1
+else
+    download_url $1
+fi
