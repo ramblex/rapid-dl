@@ -1,0 +1,55 @@
+#!/bin/bash
+
+cookie=~/.cookies/rapidshare
+DEBUG=0
+wget_load="wget --load-cookies $cookie"
+
+function debug_echo {
+    if [ $DEBUG -eq 1 ]; then
+        echo $1
+    fi
+}
+
+function download_url {
+    if [ ! -f $cookie ]; then
+        echo "Could not find rapidshare cookie. Stopping."
+        echo "Run rapid-cookie [USER] [PASSWORD]"
+        exit
+    fi
+
+    # Find the server URL
+    $wget_load -q $1 -O test.tmp
+    server=`grep -m 1 action= test.tmp | cut -d '"' -f 4`
+
+    # Find the actual URL of the file
+    $wget_load -q --post-data=dl.start=PREMIUM $server -O test.tmp
+    url=`grep /files test.tmp | tail -1 | cut -d "'" -f 2`
+
+    filename=`basename $url`
+    
+    debug_echo "URL-> $url"
+    echo -ne "Downloading '$filename'"
+
+    $wget_load -b $url -O $filename | cut -d , -f 2 | sed 's/Out/---> Out/'
+
+    # Cleanup
+    if [ -f test.tmp ] ; then
+        rm test.tmp
+    fi
+}
+
+function parse_file {
+    echo Parsing file \'$1\'...
+    while read url
+    do
+        download_url $url
+    done < $1
+}
+
+while getopts "u:f:" flag
+do
+    case "$flag" in
+        u) shift; download_url $OPTARG; shift;;
+        f) shift; parse_file $OPTARG; shift;;
+    esac
+done

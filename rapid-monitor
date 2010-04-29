@@ -12,7 +12,7 @@ j=0
 while true
 do
     clear
-    echo "===	Iteration $j	==="
+#    echo "===	Iteration $j	==="
     for i in `ls ./wget-log*`
     do
         file=`head -1 $i | sed s/--.*--//`

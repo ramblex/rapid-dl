@@ -1,0 +1,18 @@
+cookie_dir=~/.cookies
+cookie=$cookie_dir/rapidshare
+
+if [ $# -ne 2 ]
+then
+    echo "USAGE: rapid-cookie [USER] [PASSWORD]"
+    exit
+fi
+
+if [ ! -d $cookie_dir ]
+then
+    mkdir $cookie_dir
+fi
+
+wget --no-check-certificate --save-cookies $cookie \
+    --post-data="login=$1&password=$2" -O \
+    - https://ssl.rapidshare.com/cgi-bin/premiumzone.cgi > /dev/null
+

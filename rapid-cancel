@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Cancel a rapidshare download
+
+if [ $# -ne 1 ]
+then
+    echo "USAGE: ./rapid-cancel [FILE]"
+    exit
+fi
+
+# Assumes the log file and downloaded file are in the same directory
+if [ -f $1 ]
+then
+    pid=`ps ax | grep wget | grep $1 | cut -d\  -f 1`
+    [ "$pid" != "" ] && echo "Killing pid $pid" && kill -9 $pid
+    if [ -f wget-log* ]
+    then
+        log=`grep -l $1 wget-log*`
+        [ -f $log ] && echo "Removing log '$log'" && rm $log
+    fi
+    read -p "Do you want to delete the file [y/n]? "
+    [ "$REPLY" == "y" ] && rm $1
+fi
