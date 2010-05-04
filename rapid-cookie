@@ -1,4 +1,4 @@
-cookie_dir=~/.cookies
+cookie_dir=~/.rapid-dl/cookies
 cookie=$cookie_dir/rapidshare
 
 if [ $# -ne 2 ]
@@ -9,7 +9,7 @@ fi
 
 if [ ! -d $cookie_dir ]
 then
-    mkdir $cookie_dir
+    mkdir -p $cookie_dir
 fi
 
 wget --no-check-certificate --save-cookies $cookie \

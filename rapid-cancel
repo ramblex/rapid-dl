@@ -8,16 +8,15 @@ then
     exit
 fi
 
+logdir=~/.rapid-dl/logs
+
 # Assumes the log file and downloaded file are in the same directory
 if [ -f $1 ]
 then
     pid=`ps ax | grep wget | grep $1 | cut -d\  -f 1`
     [ "$pid" != "" ] && echo "Killing pid $pid" && kill -9 $pid
-    if [ -f wget-log* ]
-    then
-        log=`grep -l $1 wget-log*`
-        [ -f $log ] && echo "Removing log '$log'" && rm $log
-    fi
+    log=$logdir/$1.log
+    [ -f $log ] && echo "Removing log '$log'" && rm $log
     read -p "Do you want to delete the file [y/n]? "
     [ "$REPLY" == "y" ] && rm $1
 fi

@@ -1,8 +1,10 @@
 #!/bin/bash
 
-cookie=~/.cookies/rapidshare
+cookie=~/.rapid-dl/cookies/rapidshare
 DEBUG=0
 wget_load="wget --load-cookies $cookie"
+logdir=~/.rapid-dl/logs
+tempfile=~/.rapid-dl/tmp
 
 function debug_echo {
     if [ $DEBUG -eq 1 ]; then
@@ -17,24 +19,29 @@ function download_url {
         exit
     fi
 
+    if [ ! -d $logdir ]; then
+        mkdir -p $logdir
+    fi
+
     # Find the server URL
-    $wget_load -q $1 -O test.tmp
-    server=`grep -m 1 action= test.tmp | cut -d '"' -f 4`
+    $wget_load -q $1 -O $tempfile
+    server=`grep -m 1 action= $tempfile | cut -d '"' -f 4`
 
     # Find the actual URL of the file
-    $wget_load -q --post-data=dl.start=PREMIUM $server -O test.tmp
-    url=`grep /files test.tmp | tail -1 | cut -d "'" -f 2`
+    $wget_load -q --post-data=dl.start=PREMIUM $server -O $tempfile
+    url=`grep /files $tempfile | tail -1 | cut -d "'" -f 2`
 
     filename=`basename $url`
     
     debug_echo "URL-> $url"
     echo -ne "Downloading '$filename'"
 
-    $wget_load -b $url -O $filename | cut -d , -f 2 | sed 's/Out/---> Out/'
+    logfile=$logdir/$filename.log
+    $wget_load -b $url -o$logfile -O$filename | cut -d , -f 2 | sed 's/Out/---> Out/'
 
     # Cleanup
-    if [ -f test.tmp ] ; then
-        rm test.tmp
+    if [ -f $tempfile ] ; then
+        rm $tempfile
     fi
 }
 

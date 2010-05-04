@@ -13,7 +13,7 @@ while true
 do
     clear
 #    echo "===	Iteration $j	==="
-    for i in `ls ./wget-log*`
+    for i in `ls ~/.rapid-dl/logs/*`
     do
         file=`head -1 $i | sed s/--.*--//`
         echo -ne `basename $file`
