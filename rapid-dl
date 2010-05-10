@@ -46,7 +46,7 @@ function download_url {
     fi
 
     filename=`basename $url`
-    
+
     debug_echo "URL-> $url"
     echo -ne "Downloading '$filename'"
 
@@ -69,7 +69,7 @@ function parse_file {
 
 if [ $# -ne 1 ]
 then
-    echo "USAGE: rapid-dl [FILE|URL]"
+    echo "USAGE: `basename $0` [FILE|URL]"
 elif [ -f $1 ]
 then
     parse_file $1
