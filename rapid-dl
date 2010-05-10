@@ -23,13 +23,27 @@ function download_url {
         mkdir -p $logdir
     fi
 
+    if [ $1 = "" ]; then
+	return
+    fi
+
     # Find the server URL
     $wget_load -q $1 -O $tempfile
     server=`grep -m 1 action= $tempfile | cut -d '"' -f 4`
 
+    if [ "$server" = "" ]; then
+	echo "Could not find the rapidshare server URL for '$1'. Exiting"
+	exit
+    fi
+
     # Find the actual URL of the file
     $wget_load -q --post-data=dl.start=PREMIUM $server -O $tempfile
     url=`grep /files $tempfile | tail -1 | cut -d "'" -f 2`
+
+    if [ "$url" = "" ]; then
+	echo "Could not find the rapidshare URL for '$1'. Exiting"
+	exit
+    fi
 
     filename=`basename $url`
     
